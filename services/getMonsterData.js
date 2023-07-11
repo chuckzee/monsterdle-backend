@@ -80,11 +80,9 @@ function returnMonsterData(monsterId, tipNumber) {
                 "additional": monster.additional,
             };
             break;
-        case 7:
+        default:
             response = monster;
             break;
-        default:
-            response = {};
     }
 
     return response;
