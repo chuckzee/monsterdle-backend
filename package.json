@@ -13,6 +13,7 @@
     "express": "~4.16.1",
     "fuzzyset.js": "^1.0.7",
     "http-errors": "~1.6.3",
+    "lodash": "^4.17.21",
     "morgan": "~1.9.1",
     "wikiapi": "^1.19.4"
   }
