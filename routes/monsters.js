@@ -3,10 +3,10 @@ var router = express.Router();
 var returnMonsterData = require('../services/getMonsterData.js');
 var evaluateGuess = require('../services/evaluateGuess.js');
 
-router.get('/:id', function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
   let monsterId = req.params.id;
-  let tipNumber = parseInt(req.query.guess);
-  let monsterData = returnMonsterData(monsterId, tipNumber);
+  let tipNumber = parseInt(req.query.guessNumber);
+  let monsterData = await returnMonsterData(monsterId, tipNumber);
   res.send(monsterData);
 });
 
