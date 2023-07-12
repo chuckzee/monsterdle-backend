@@ -12,7 +12,7 @@ router.get('/:id', async function(req, res, next) {
 
 router.get('/:id/guess', function(req, res, next) {
   let monsterId = req.params.id; // Get id from path parameters
-  let guess = req.query.guess; // Get guess from query parameters
+  let guess = req.query.guessNumber; // Get guess from query parameters
   let result = evaluateGuess(monsterId, guess);
   res.send(result);
 });
