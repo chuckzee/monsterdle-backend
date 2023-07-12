@@ -12,9 +12,12 @@ router.get('/:id', async function(req, res, next) {
 
 router.get('/:id/guess', function(req, res, next) {
   let monsterId = req.params.id; // Get id from path parameters
-  let guess = req.query.guessNumber; // Get guess from query parameters
-  let result = evaluateGuess(monsterId, guess);
-  res.send(result);
+  let guess = req.query.guess; // Get guess from query parameters
+  let guessNumber = parseInt(req.query.guessNumber);
+  let correctness = evaluateGuess(monsterId, guess);
+  // if result is { correct: false } & guessNumber >= 7, send the response
+  // otherwise, sent returnMonsterData(monsterId, guessNumber +1)
+  res.send(correctness);
 });
 
 module.exports = router;
