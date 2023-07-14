@@ -2,11 +2,52 @@ let monsters = require('../data/monster_data.json');
 const axios = require('axios');
 const sharp = require('sharp');
 
-async function getImageData(url) {
-  const response = await axios.get(url, { responseType: 'arraybuffer' });
-  const imageBuffer = Buffer.from(response.data, 'binary');
-  return imageBuffer.toString('base64');
+let cache = {
+    date: null,
+    imageData: null,
+};
+
+function clearCache() {
+  cache.date = null;
+  cache.imageData = null;
 }
+
+// Calculate the number of ms until midnight
+const now = new Date();
+const night = new Date(
+  now.getFullYear(),
+  now.getMonth(),
+  now.getDate() + 1, // the next day
+  0, 0, 0 // midnight
+);
+const msUntilMidnight = night.getTime() - now.getTime();
+
+// Clear cache at next midnight and every 24 hours after that
+setTimeout(() => {
+  clearCache();
+  setInterval(clearCache, 24 * 60 * 60 * 1000);
+}, msUntilMidnight);
+
+async function getImageData(url) {
+    const today = new Date().toISOString().slice(0, 10); // Get today's date in 'yyyy-mm-dd' format
+  
+    if (cache.date === today) {
+      // If the cache is up-to-date, return the cached image data
+      console.log("cache hit");
+      return cache.imageData;
+    } else {
+      // If the cache is not up-to-date, fetch the image
+      const response = await axios.get(url, { responseType: 'arraybuffer' });
+      const imageBuffer = Buffer.from(response.data, 'binary');
+      const base64Image = imageBuffer.toString('base64');
+    
+      // Update the cache
+      cache.date = today;
+      cache.imageData = base64Image;
+  
+      return base64Image;
+    }
+  }
 
 async function returnMonsterData(monsterId, tipNumber) {
     let monster = monsters.monsters[monsterId];
@@ -30,84 +71,69 @@ async function returnMonsterData(monsterId, tipNumber) {
             response = {
                 "image": `data:image/jpeg;base64,${monsterImage}`,
                 "size": monster.size,
-                "challenge": monster.challenge,
+                "challenge": monster.cr,
             };
             break;
         case 3:
             response = {
                 "image": `data:image/jpeg;base64,${monsterImage}`,
                 "size": monster.size,
-                "challenge": monster.challenge,
-                "alignment": monster.alignment,
+                "challenge": monster.cr,
+                "ac": monster.ac,
+                "hp": monster.hp,
             };
             break;
         case 4:
             response = {
                 "image": `data:image/jpeg;base64,${monsterImage}`,
                 "size": monster.size,
-                "challenge": monster.challenge,
+                "challenge": monster.cr,
                 "alignment": monster.alignment,
                 "ac": monster.ac,
-                "speed": monster.speed,
+                "hp": monster.hp,
+                "source": monster.source,
             };
             break;
         case 5:
             response = {
                 "image": `data:image/jpeg;base64,${monsterImage}`,
                 "size": monster.size,
-                "challenge": monster.challenge,
+                "challenge": monster.cr,
                 "alignment": monster.alignment,
                 "ac": monster.ac,
-                "speed": monster.speed,
-                "str": monster.str,
-                "dex": monster.dex,
-                "con": monster.con,
-                "int": monster.int,
-                "wis": monster.wis,
-                "cha": monster.cha,
-                "senses": monster.senses,
-                "languages": monster.languages,
+                "hp": monster.hp,
+                "movement": monster.movement,
+                "legendary": monster.legendary,
+                "source": monster.source,
             };
             break;
         case 6:
             response = {
                 "image": `data:image/jpeg;base64,${monsterImage}`,
                 "size": monster.size,
-                "challenge": monster.challenge,
+                "type": monster.type,
+                "challenge": monster.cr,
                 "alignment": monster.alignment,
                 "ac": monster.ac,
-                "speed": monster.speed,
-                "str": monster.str,
-                "dex": monster.dex,
-                "con": monster.con,
-                "int": monster.int,
-                "wis": monster.wis,
-                "cha": monster.cha,
-                "senses": monster.senses,
-                "languages": monster.languages,
+                "hp": monster.hp,
+                "movement": monster.movement,
+                "legendary": monster.legendary,
                 "source": monster.source,
-                "additional": monster.additional,
             };
             break;
         default:
             response = {
-                "name": monster.name,
                 "image": `data:image/jpeg;base64,${monsterImage}`,
+                "name": monster.name,
                 "size": monster.size,
-                "challenge": monster.challenge,
+                "type": monster.type,
+                "challenge": monster.cr,
                 "alignment": monster.alignment,
                 "ac": monster.ac,
-                "speed": monster.speed,
-                "str": monster.str,
-                "dex": monster.dex,
-                "con": monster.con,
-                "int": monster.int,
-                "wis": monster.wis,
-                "cha": monster.cha,
-                "senses": monster.senses,
-                "languages": monster.languages,
+                "hp": monster.hp,
+                "movement": monster.movement,
+                "legendary": monster.legendary,
                 "source": monster.source,
-                "additional": monster.additional,
             };
             break;
     }
