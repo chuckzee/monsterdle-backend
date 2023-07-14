@@ -7,7 +7,7 @@ with open('monster_data.json') as f:
     data = json.load(f)
 
 # Your Bing Search v7 subscription key and endpoint
-subscription_key = 'ae7081829e7a4847b17f7c8980b03634'
+subscription_key = 'd2a1bc01788c4105871363be28e45222'
 endpoint = 'https://api.bing.microsoft.com/v7.0/images/search'
 
 # Initialize a counter
@@ -20,7 +20,7 @@ for monster in data['monsters']:
         break
 
     # Query term(s) to search for. 
-    query = monster['name'] + ' 5e'
+    query = monster['name'] + ' monster D&D 5e'
 
     # Construct a request
     mkt = 'en-US'
@@ -39,7 +39,7 @@ for monster in data['monsters']:
     print(monster['name'], image_url)
 
     # Pause for 0.33 seconds
-    time.sleep(0.33)
+    time.sleep(0.01)
 
 # Save the updated data
 with open('monster_data.json', 'w') as f:
