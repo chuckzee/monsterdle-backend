@@ -7,7 +7,7 @@ with open('monster_data.json') as f:
     data = json.load(f)
 
 # Your Bing Search v7 subscription key and endpoint
-subscription_key = 'd2a1bc01788c4105871363be28e45222'
+subscription_key = "your key here"
 endpoint = 'https://api.bing.microsoft.com/v7.0/images/search'
 
 # Initialize a counter
